@@ -1,7 +1,17 @@
 data/
 models/
-src/prax2.py
-testimports.py
-src/data_loader.py
-src/
-app.py
+*.pt
+*.pkl
+*.joblib
+*.h5
+*.csv
+*.npy
+
+# Streamlit and logs
+.streamlit/
+*.log
+
+# Environment files
+.env
+*.sqlite
+*.db
