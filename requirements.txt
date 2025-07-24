@@ -1,13 +1,13 @@
 numpy
-sklearn
+scikit-learn
 xgboost
 pandas
 streamlit
 joblib
 torch
 pathlib
-sys
 sqlite3
+
 
 
 
