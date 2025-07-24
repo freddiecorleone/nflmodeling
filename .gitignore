@@ -1,6 +1,6 @@
 src/datascraping
-src/XGBModelCreator.py
-src/prax2.py
+XGBModelCreator.py
+prax2.py
 data/
 /data
 *.xgb
