@@ -1,7 +1,8 @@
+
 data/
-models/
-*.pt
-*.pkl
+/data
+*.xgb
+
 *.joblib
 *.h5
 *.csv
@@ -15,3 +16,17 @@ models/
 .env
 *.sqlite
 *.db
+
+
+# Python cache and artifacts
+__pycache__/
+*.py[cod]
+*.egg
+*.egg-info/
+dist/
+build/
+
+# Jupyter and IDE files
+.ipynb_checkpoints/
+.vscode/
+.DS_Store
