@@ -6,7 +6,6 @@ streamlit
 joblib
 torch
 pathlib
-sqlite3
 
 
 
