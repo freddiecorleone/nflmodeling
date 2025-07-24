@@ -1,4 +1,6 @@
-
+src/datascraping
+src/XGBModelCreator.py
+src/prax2.py
 data/
 /data
 *.xgb
@@ -30,3 +32,4 @@ build/
 .ipynb_checkpoints/
 .vscode/
 .DS_Store
+

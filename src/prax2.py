@@ -1,4 +1,4 @@
-import shelve, nflhtmlparsing as parser, pandas as pd, sqlite3, time, random as rand, re 
+import shelve, src.datascraping.nflhtmlparsing as parser, pandas as pd, sqlite3, time, random as rand, re 
 
 
 
@@ -6,6 +6,7 @@ shelfFile = shelve.open('data/nfldata2.0')
 
 games = shelfFile['finalgamedata']
 game = games[3234]
+#
 
 print(game.week, game.year, game.awayteam, game.hometeam)
 shelfFile.close()

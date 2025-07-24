@@ -7,6 +7,7 @@ from sklearn.metrics import classification_report, confusion_matrix
 
 def column(matrix, i):
     return [row[i] for row in matrix]
+#
 
 
 def createModelingDatabase():
