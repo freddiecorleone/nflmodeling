@@ -41,6 +41,8 @@ def createNNModel():
     conn.close()
     X = df.drop(columns=["result", "game_id"])  # exclude ID and non-numeric columns
     y = df["result"]
+    print(X.head(20))
+    print(y.head(20))
     scaler = StandardScaler()
     X_scaled = scaler.fit_transform(X)
     y_array = y.values.astype(np.float32)
@@ -84,5 +86,7 @@ def createNNModel():
     print(f"ROC AUC: {roc_auc:.4f}")
     torch.save(model.state_dict(), paths.get_project_root() / "models/nn_model.pt")
     joblib.dump(scaler, paths.get_project_root() / "models/scaler.pkl")
+
+
 
 

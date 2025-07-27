@@ -4,6 +4,7 @@ prax2.py
 data/
 /data
 *.xgb
+.venv
 
 *.joblib
 *.h5

@@ -17,7 +17,6 @@ model2.load_state_dict(torch.load("models/nn_model.pt"))
 scaler = joblib.load(paths.get_project_root() /"models"/"scaler.pkl")
 model2.eval()
 
-
 # UI inputs
 st.title("NFL Win Probability Predictor")
 
@@ -25,32 +24,33 @@ modeltype = st.selectbox("Model type", ['Neural Net', 'XGBoost'])
 
 
 
-time_passed = st.slider("Time Passed (minutes)", 0, 55, 30)
+game_seconds_passed = st.slider("Seconds passed", 0, 3600, 1800)
+game_seconds_remaining = 3600 - game_seconds_passed
 
 current_margin = st.number_input("Current margin (home - away)", -50, 50, 0)
 spread = st.number_input("Pregame spread (home - away)", -30.0, 30.0, 0.0)
 ou = st.number_input("Over/Under", 20.0, 100.0, 45.0)
-field_position = st.slider("Field Position (0-100)", 0, 100, 50)
+yardline_100 = st.slider("Field Position (0-100)", 0, 100, 50)
 possessioninput = st.selectbox("Who has possession?", ["Home", "Away"])
 
 if possessioninput == "Home":
     home_possession = 1
 else:
     home_possession = 0 
-to_go = st.number_input("Yards to go", 1, 40, 10)
+ydstogo = st.number_input("Yards to go", 1, 40, 10)
 down = st.number_input("Down", 1, 4, 1)
-columns = ['time', 'possession', 'to_go', 'down','field_position', 'margin', 'spread', 'ou']
+columns = ['game_seconds_remaining', 'down', 'ydstogo', 'yardline_100','home_possession', 'margin', 'total_line', 'spread_line']
     
 # Feature formatting
 row = pd.DataFrame([[
-    time_passed,     # time
-    home_possession,     # possession
-    to_go,     # to go
-    down,     # down
-    field_position,    # field_position 1-50 home, 51-99 away
+    game_seconds_remaining,   #seconds remaining
+    down,     #fdown
+    ydstogo,     # to go
+    yardline_100,     # 
+    home_possession,   # field_position relative to team with possession
     current_margin,     #margin home -away
-    spread,  #pre game spread
-    ou   # pregame ou
+    ou,  #pre game over under
+    spread   # pregame spread
 
 ]], columns=columns)
 

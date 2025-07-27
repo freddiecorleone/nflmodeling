@@ -1,4 +1,4 @@
-import joblib, sqlite3, data_loader, utils.paths as paths, xgboost as xgb, pandas as pd, matplotlib.pyplot as plt, numpy as np
+import joblib, sqlite3, data_loader, utils.paths as paths, xgboost as xgb, pandas as pd, numpy as np
 from sklearn.model_selection import train_test_split 
 from sklearn.model_selection import GroupShuffleSplit 
 from sklearn.metrics import accuracy_score, roc_auc_score
@@ -11,8 +11,47 @@ def column(matrix, i):
 
 
 def createModelingDatabase():
-    QUERY = ''' CREATE TABLE modeling.plays_for_model AS
-    SELECT * FROM
+    QUERY = '''CREATE TABLE modeling.plays_for_model AS
+    SELECT game_id,
+    game_seconds_remaining, 
+    down, 
+    ydstogo,
+    yardline_100, 
+    CASE 
+    WHEN posteam = home_team
+    THEN 1
+    ELSE 
+    0 
+    END AS home_possession,
+    total_home_score - total_away_score AS margin,
+    total_line, 
+    spread_line, 
+    CASE
+    WHEN result > 0
+    THEN 1
+    ELSE
+    0 
+    END AS result
+    FROM plays
+    WHERE down >=1 and ydstogo >=1
+    '''
+    model_db = paths.get_project_root() / 'data' / 'modeling.db'
+
+
+    with sqlite3.connect(data_loader.NFLSQLDatabasePath()) as conn:
+        conn.execute(f"ATTACH DATABASE '{model_db}' AS modeling;")
+        conn.execute("DROP TABLE IF EXISTS modeling.plays_for_model;")
+        conn.execute(QUERY)
+        conn.execute("DETACH DATABASE modeling;")
+        conn.commit()
+
+    print("✓  modeling.db created with table 'plays_for_model'")
+    return 
+
+
+#def createModelingDatabase():
+    #QUERY = ''' CREATE TABLE modeling.plays_for_model AS
+    '''SELECT * FROM
     (SELECT g.game_id, 
     (15 - CAST(substr(p.time, 1, instr(p.time, ':') - 1) AS FLOAT) - CAST(substr(p.time, instr(p.time, ':') + 1) AS FLOAT) / 60) + 15*(p.quarter - 1) AS time, 
     p.home_possession as possession, CAST(p.to_go AS INTEGER) as to_go, CAST(p.down AS INTEGER) as down, CAST(p.field_position AS INTEGER) as field_position, p.homepoints - p.awaypoints as margin,  
@@ -33,7 +72,7 @@ def createModelingDatabase():
     FROM plays as p
     JOIN games as g ON p.game_id = g.game_id)
      WHERE  to_go >= 1 AND down >= 1'''
-    model_db = paths.get_project_root() / 'data' / 'modeling.db'
+    '''model_db = paths.get_project_root() / 'data' / 'modeling.db'
 
     with sqlite3.connect(data_loader.NFLSQLDatabasePath()) as conn:
         conn.execute(f"ATTACH DATABASE '{model_db}' AS modeling;")
@@ -43,7 +82,7 @@ def createModelingDatabase():
         conn.commit()
 
     print("✓  modeling.db created with table 'plays_for_model'")
-
+    return '''
     
 
 
@@ -58,7 +97,7 @@ def createXGBModel():
     conn = sqlite3.connect(modelingpath)
     df = pd.read_sql("SELECT * FROM plays_for_model", conn)
     conn.close()
-    X = df.drop(columns=["result", "game_id"])  # exclude ID and non-numeric columns
+    X = df.drop(columns=["result", "game_id"])  # exclude result and game_id
     y = df["result"]
 
     gss = GroupShuffleSplit(test_size=0.2, random_state=42)
@@ -73,12 +112,11 @@ def createXGBModel():
         learning_rate=0.01,
         use_label_encoder=False,
         eval_metric="logloss",
-        monotone_constraints="(0, 0, 0, 0, 1, 1, -1, 0)"
     )
 
     model.fit(X_train, y_train)
     
-    joblib.dump(model, paths.get_project_root() / "data" / "win_prob_model.pkl")
+    joblib.dump(model, paths.get_project_root() / "models" / "win_prob_model.pkl")
 
 
 
@@ -199,9 +237,6 @@ def createBinXGBModel():
 
 
 
-
-
-
 #X_val = pd.read_pickle(paths.get_project_root() /"data"/ "X_valuation_data.pkl")
 #y_val = pd.read_pickle(paths.get_project_root() /"data"/ "y_valuation_data.pkl")
 #model = joblib.load(paths.get_project_root() / "models" / "bin_model.pkl")
@@ -268,7 +303,6 @@ for i in range(len(y_proba[0])):
 for i in range(len(y2[0])):
     print(f'{bin_labels[i]}: {int(y2[0][i]*100)} %')'''
 
-createXGBModel()
 
 
 
@@ -309,6 +343,6 @@ plt.show()'''
 
 
 
-
+createXGBModel()
 
 
