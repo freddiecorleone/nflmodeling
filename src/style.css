@@ -1,0 +1,28 @@
+/* style.css */
+@import url('https://fonts.googleapis.com/css2?family=Lato:wght@400;700&family=Marcellus&display=swap');
+
+
+body {
+    font-family: 'Lato', sans-serif;
+    background-color: #f9f9f9;
+    color: #111;
+}
+
+h1, h2, h3 {
+    font-family: 'Marcellus', serif;
+    color: #222;
+}
+
+.stButton > button {
+    font-family: 'Lato', sans-serif;
+    background-color: white;
+    border: 2px solid black;
+    color: black;
+}
+
+.border-box {
+    border: 2px solid black;
+    padding: 1rem;
+    border-radius: 8px;
+    margin-bottom: 2rem;
+}

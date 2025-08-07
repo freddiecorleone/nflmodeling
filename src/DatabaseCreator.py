@@ -245,26 +245,26 @@ def createXGBModel():
 
     gss = GroupShuffleSplit(test_size=0.2, random_state=42)
     train_idx, test_idx = next(gss.split(X, y, groups=df["game_id"]))
+    print(X.columns.tolist())
 
     X_train, X_val = X.iloc[train_idx], X.iloc[test_idx]
     y_train, y_val = y.iloc[train_idx], y.iloc[test_idx]
 
     model = xgb.XGBClassifier(
-        n_estimators=400,
+        n_estimators=500,
         max_depth=6,
         learning_rate=0.01,
         use_label_encoder=False,
         eval_metric="logloss",
+        monotone_constraints= '(0, 0, 0, 0, 0, 1, 0, 1)'
     )
 
     model.fit(X_train, y_train)
     
     joblib.dump(model, paths.get_project_root() / "models" / "win_prob_model.pkl")
 
+
     plot_calibration_curve(model, X_val, y_val)
-
-
-
 
     y_pred = model.predict(X_val)
     y_proba = model.predict_proba(X_val)[:, 1]
@@ -326,7 +326,7 @@ def plot_calibration_curve(model, X_test, y_test, label_encoder=None, n_bins=10)
 
 
 
-
+createXGBModel()
 
 def createBinModelingDatabase():
     QUERY = '''CREATE TABLE modeling.plays_for_model AS

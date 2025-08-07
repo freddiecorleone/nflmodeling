@@ -1,4 +1,4 @@
-import joblib, sqlite3, data_loader, utils.paths as paths, xgboost as xgb, pandas as pd, numpy as np, types as t
+import joblib, sqlite3, utils.paths as paths, xgboost as xgb, pandas as pd, numpy as np, types as t
 from sklearn.model_selection import train_test_split 
 from sklearn.model_selection import GroupShuffleSplit 
 from sklearn.metrics import accuracy_score, roc_auc_score
@@ -8,10 +8,6 @@ from sklearn.preprocessing import LabelEncoder
     
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score, log_loss
-
-
-
-
 
 class FourthDownDecisionModel():
     def __init__(self, model = None, label_encoder = None):
@@ -315,9 +311,6 @@ class TimeoutDecisionModel():
 
 
 
-
-
-
 class PassPlayResultModel():
     def __init__(self, model = None, bins = None, labels = None):
         self.bins = bins or [-np.inf, -10, -1, 0, 3, 7, 15, 30, np.inf]
@@ -416,7 +409,6 @@ class PassPlayResultModel():
 
     
 
-
 class RunPlayResultModel():
     def __init__(self, model = None, bins = None, labels = None):
         self.bins = bins or [-np.inf, 0, 2, 4, 8, 15, np.inf]
@@ -512,15 +504,3 @@ class RunPlayResultModel():
 
         data = joblib.load(path)
         return cls(model=data["model"], labels = data['labels'], bins = data['bins'])
-
-
-
-    
-
-
-
-
-
-
-
-
